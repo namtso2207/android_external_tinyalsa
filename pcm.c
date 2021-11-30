@@ -315,6 +315,12 @@ static unsigned int pcm_format_to_alsa(enum pcm_format format)
         return SNDRV_PCM_FORMAT_S24_3LE;
     case PCM_FORMAT_S24_LE:
         return SNDRV_PCM_FORMAT_S24_LE;
+
+#ifdef SUPPORT_IEC958
+    case PCM_FORMAT_IEC958_SUBFRAME_LE:
+        return SNDRV_PCM_FORMAT_IEC958_SUBFRAME_LE;
+#endif
+
     default:
     case PCM_FORMAT_S16_LE:
         return SNDRV_PCM_FORMAT_S16_LE;
@@ -329,6 +335,10 @@ unsigned int pcm_format_to_bits(enum pcm_format format)
         return 32;
     case PCM_FORMAT_S24_3LE:
         return 24;
+#ifdef SUPPORT_IEC958
+    case PCM_FORMAT_IEC958_SUBFRAME_LE:
+        return 32;
+#endif
     default:
     case PCM_FORMAT_S16_LE:
         return 16;
