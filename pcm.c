@@ -580,37 +580,13 @@ int pcm_write(struct pcm *pcm, const void *data, unsigned int count)
     }
 }
 
-static short out_vol = 4.0;
-static void volume_process(const void *buffer, size_t length, short volume) {
-
-short * buffer_end = (short*)buffer + length;
-       short * pcmData = (short *)buffer;
-	   int i = 0;
-	int pcmval;
-
-       while (pcmData < buffer_end) {
-	   //if (i % channels != 1 && i % channels != 0) {
-               pcmval = (short)*pcmData * volume;
-                if (pcmval < 32768 && pcmval > -32768) {
-                        *pcmData = pcmval;
-                } else if (pcmval > 32767) {
-                        *pcmData = 32767;
-                } else if (pcmval < -32767) {
-                        *pcmData = -32767;
-                }
-	  //}
-            ++pcmData;
-	    i++;
-       }
-}
-
 int pcm_read(struct pcm *pcm, void *data, unsigned int count)
 {
     struct snd_xferi x;
 
     if (!(pcm->flags & PCM_IN))
         return -EINVAL;
-    memset(data, 0, count);
+
     x.buf = data;
     x.frames = count / (pcm->config.channels *
                         pcm_format_to_bits(pcm->config.format) / 8);
@@ -632,7 +608,6 @@ int pcm_read(struct pcm *pcm, void *data, unsigned int count)
             }
             return oops(pcm, errno, "cannot read stream data");
         }
-        volume_process(x.buf, count , out_vol);
         return 0;
     }
 }
