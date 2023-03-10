@@ -1020,7 +1020,7 @@ struct pcm *pcm_open(unsigned int card, unsigned int device,
     if (!config->stop_threshold) {
         if (pcm->flags & PCM_IN)
             pcm->config.stop_threshold = sparams.stop_threshold =
-                config->period_count * config->period_size * 10;
+                config->period_count * config->period_size;
         else
             pcm->config.stop_threshold = sparams.stop_threshold =
                 config->period_count * config->period_size;
